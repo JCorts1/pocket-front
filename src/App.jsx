@@ -2,63 +2,172 @@ import React, { useState } from 'react';
 import './App.css'; // Make sure this CSS file is imported
 import logo from '../src/assets/img/logo.jpg'; // Import the logo
 
+// --- Component Definitions Moved Outside ---
+// By defining the components outside of App, they aren't re-created on every render,
+// which prevents them from losing focus. We now pass all necessary state and functions
+// down as props.
+
+const LoginForm = ({ email, password, setEmail, setPassword, handleSubmit }) => (
+  <form onSubmit={handleSubmit}>
+    <h2>Login</h2>
+    <input
+      type="email"
+      placeholder="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+    />
+    <button className="form-btn" type="submit">Login</button>
+  </form>
+);
+
+const SignUpForm = ({ fullName, email, password, setFullName, setEmail, setPassword, handleSubmit }) => (
+  <form onSubmit={handleSubmit}>
+    <h2>Create Account</h2>
+    <input
+      type="text"
+      placeholder="Full Name"
+      value={fullName}
+      onChange={(e) => setFullName(e.target.value)}
+      required
+    />
+    <input
+      type="email"
+      placeholder="Email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      required
+    />
+    <button className="form-btn" type="submit">Sign Up</button>
+  </form>
+);
+
+
 const App = () => {
-  // State to track if we are on the login or signup view
+  // State for the view
   const [isLoginView, setIsLoginView] = useState(true);
-  // State to manage the fade animation
   const [isFading, setIsFading] = useState(false);
 
-  // Function to handle toggling between Login and Sign Up
-  const handleToggleView = () => {
-    setIsFading(true); // Start the fade-out
+  // State for form inputs
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    // Wait for the fade-out animation to complete
-    setTimeout(() => {
-      setIsLoginView(currentView => !currentView); // Switch the view
-      setIsFading(false); // Start the fade-in
-    }, 400); // This duration must match the CSS transition duration
+  // State for messages from the API
+  const [message, setMessage] = useState('');
+
+  const RAILS_API_URL = 'http://localhost:3000'; // Your Rails server URL
+
+  // Function to handle form submission
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage(''); // Clear previous messages
+
+    const endpoint = isLoginView ? '/login' : '/signup';
+    const payload = {
+      user: {
+        email: email,
+        password: password,
+        // Only include name for signups
+        ...( !isLoginView && { name: fullName } )
+      }
+    };
+
+    try {
+      const response = await fetch(RAILS_API_URL + endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // Get the JWT from the authorization header
+      const jwt = response.headers.get('Authorization');
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Store the JWT for future requests
+        if(jwt) {
+          localStorage.setItem('token', jwt);
+        }
+        setMessage(result.status.message);
+        // Here you would typically redirect the user or update the UI
+        // For example: window.location.href = '/dashboard';
+        console.log('Success:', result);
+      } else {
+        // Handle errors from the server
+        setMessage(result.status.message || 'An error occurred.');
+        console.error('Error:', result);
+      }
+
+    } catch (error) {
+      setMessage('Network error. Could not connect to the server.');
+      console.error('Network Error:', error);
+    }
   };
 
-  // The content for the Login form - Updated H2
-  const LoginForm = () => (
-    <>
-      <h2>Login</h2>
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <button className="form-btn" type="submit">Login</button>
-    </>
-  );
-
-  // The content for the Sign Up form
-  const SignUpForm = () => (
-    <>
-      <h2>Create Account</h2>
-      <input type="text" placeholder="Full Name" />
-      <input type="email" placeholder="Email" />
-      <input type="password" placeholder="Password" />
-      <button className="form-btn" type="submit">Sign Up</button>
-    </>
-  );
+  const handleToggleView = () => {
+    setIsFading(true);
+    setMessage(''); // Clear messages on view toggle
+    // Clear input fields when toggling views
+    setFullName('');
+    setEmail('');
+    setPassword('');
+    setTimeout(() => {
+      setIsLoginView(currentView => !currentView);
+      setIsFading(false);
+    }, 400);
+  };
 
   return (
-    // This is the main container with your background image
     <div className='login-background'>
-      {/* This is the glassy, semi-transparent form container */}
       <div className="form-container">
-
-        {/* Logo and Welcome Message Container */}
         <div className="welcome-header">
           <img src={logo} alt="Pocket App Logo" className="logo-img" />
-          {/* Using an h2 for consistency */}
           <h2 className="welcome-message">Welcome to POCKET</h2>
         </div>
 
-        {/* This div handles the fading animation */}
+        {/* Display API messages here */}
+        {message && <p className="api-message">{message}</p>}
+
         <div className={`form-content ${isFading ? 'fading' : ''}`}>
-          {isLoginView ? <LoginForm /> : <SignUpForm />}
+          {isLoginView ? (
+            <LoginForm
+              email={email}
+              password={password}
+              setEmail={setEmail}
+              setPassword={setPassword}
+              handleSubmit={handleSubmit}
+            />
+          ) : (
+            <SignUpForm
+              fullName={fullName}
+              email={email}
+              password={password}
+              setFullName={setFullName}
+              setEmail={setEmail}
+              setPassword={setPassword}
+              handleSubmit={handleSubmit}
+            />
+          )}
         </div>
 
-        {/* This is the text and button to switch between forms */}
         <p className="toggle-text">
           {isLoginView ? "Don't have an account? " : "Already have an account? "}
           <button onClick={handleToggleView} className="toggle-btn">
