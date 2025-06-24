@@ -1,0 +1,141 @@
+.login-background {
+  /* IMPORTANT: Make sure this path is correct for your project! */
+  background-image: url('../src/assets/img/home-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+  background-attachment: fixed;
+  /* Flexbox to perfectly center the form */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The glassmorphism container for the form */
+.form-container {
+  width: 90%;
+  max-width: 400px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari */
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Container for the logo and welcome message */
+.welcome-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%; /* Makes the image a circle */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 1rem;
+}
+
+/* Styling for BOTH welcome message and form titles */
+.welcome-message,
+.form-container h2 {
+  font-size: 1.75rem; /* Adjusted size for both titles */
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+/* Specific margin for the form titles */
+.form-container h2 {
+    margin-bottom: 1.5rem;
+}
+
+
+/* The content inside the form (the actual inputs and text) */
+.form-content {
+  opacity: 1;
+  transition: opacity 0.4s ease-in-out;
+}
+
+/* Fading class to trigger the animation */
+.form-content.fading {
+  opacity: 0;
+}
+
+/* Styling for input fields */
+.form-container input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333; /* Dark grey text color for high contrast */
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Styling for the placeholder text inside inputs */
+.form-container input::placeholder {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+/* Styling for inputs when they are focused (clicked on) */
+.form-container input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  caret-color: #ec4899; /* Pink cursor to match button */
+}
+
+/* Styling for the main pink button */
+.form-btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  background-color: #ec4899;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-btn:hover {
+  background-color: #db2777;
+}
+
+/* Styling for the text below the form */
+.toggle-text {
+  text-align: center;
+  font-size: 0.875rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+/* Styling for the "Sign Up" / "Login" toggle button */
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.875rem;
+}
+
+.toggle-btn:hover {
+  text-decoration: underline;
+}
