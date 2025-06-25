@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import './App.css'; // Make sure this CSS file is imported
-import logo from '../src/assets/img/logo.jpg'; // Import the logo
+import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
+import './App.css';
+import logo from '../src/assets/img/logo.jpg';
 
-// --- Component Definitions Moved Outside ---
-// By defining the components outside of App, they aren't re-created on every render,
-// which prevents them from losing focus. We now pass all necessary state and functions
-// down as props.
-
+// These form components are defined outside the main App component
+// to prevent them from losing focus when the App component re-renders.
 const LoginForm = ({ email, password, setEmail, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
     <h2>Login</h2>
@@ -14,14 +12,14 @@ const LoginForm = ({ email, password, setEmail, setPassword, handleSubmit }) => 
       type="email"
       placeholder="Email"
       value={email}
-      onChange={(e) => setEmail(e.target.value)}
+      onChange={(event) => setEmail(event.target.value)}
       required
     />
     <input
       type="password"
       placeholder="Password"
       value={password}
-      onChange={(e) => setPassword(e.target.value)}
+      onChange={(event) => setPassword(event.target.value)}
       required
     />
     <button className="form-btn" type="submit">Login</button>
@@ -35,21 +33,21 @@ const SignUpForm = ({ fullName, email, password, setFullName, setEmail, setPassw
       type="text"
       placeholder="Full Name"
       value={fullName}
-      onChange={(e) => setFullName(e.target.value)}
+      onChange={(event) => setFullName(event.target.value)}
       required
     />
     <input
       type="email"
       placeholder="Email"
       value={email}
-      onChange={(e) => setEmail(e.target.value)}
+      onChange={(event) => setEmail(event.target.value)}
       required
     />
     <input
       type="password"
       placeholder="Password"
       value={password}
-      onChange={(e) => setPassword(e.target.value)}
+      onChange={(event) => setPassword(event.target.value)}
       required
     />
     <button className="form-btn" type="submit">Sign Up</button>
@@ -58,33 +56,33 @@ const SignUpForm = ({ fullName, email, password, setFullName, setEmail, setPassw
 
 
 const App = () => {
-  // State for the view
+  const navigate = useNavigate(); // Initialize the navigate function
+
   const [isLoginView, setIsLoginView] = useState(true);
   const [isFading, setIsFading] = useState(false);
-
-  // State for form inputs
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // State for messages from the API
   const [message, setMessage] = useState('');
 
-  const RAILS_API_URL = 'http://localhost:3000'; // Your Rails server URL
+  const RAILS_API_URL = 'http://localhost:3000';
 
-  // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage('');
 
     const endpoint = isLoginView ? '/login' : '/signup';
+
+    // Construct the payload based on whether it's a login or signup action
+    let userPayload;
+    if (isLoginView) {
+      userPayload = { email: email, password: password };
+    } else {
+      userPayload = { name: fullName, email: email, password: password };
+    }
+
     const payload = {
-      user: {
-        email: email,
-        password: password,
-        // Only include name for signups
-        ...( !isLoginView && { name: fullName } )
-      }
+      user: userPayload
     };
 
     try {
@@ -96,36 +94,27 @@ const App = () => {
         body: JSON.stringify(payload),
       });
 
-      // Get the JWT from the authorization header
       const jwt = response.headers.get('Authorization');
-
       const result = await response.json();
 
       if (response.ok) {
-        // Store the JWT for future requests
-        if(jwt) {
+        if (jwt) {
           localStorage.setItem('token', jwt);
         }
-        setMessage(result.status.message);
-        // Here you would typically redirect the user or update the UI
-        // For example: window.location.href = '/dashboard';
-        console.log('Success:', result);
+        // On success, redirect to the dashboard
+        navigate('/dashboard');
       } else {
-        // Handle errors from the server
-        setMessage(result.status.message || 'An error occurred.');
-        console.error('Error:', result);
+        setMessage(result.status?.message || 'An error occurred.');
       }
 
     } catch (error) {
       setMessage('Network error. Could not connect to the server.');
-      console.error('Network Error:', error);
     }
   };
 
   const handleToggleView = () => {
     setIsFading(true);
-    setMessage(''); // Clear messages on view toggle
-    // Clear input fields when toggling views
+    setMessage('');
     setFullName('');
     setEmail('');
     setPassword('');
@@ -143,7 +132,6 @@ const App = () => {
           <h2 className="welcome-message">Welcome to POCKET</h2>
         </div>
 
-        {/* Display API messages here */}
         {message && <p className="api-message">{message}</p>}
 
         <div className={`form-content ${isFading ? 'fading' : ''}`}>
