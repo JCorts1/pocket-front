@@ -1,3 +1,6 @@
+/* Sets the Poppins font for the whole app */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 .dashboard-container {
   background-image: url("../img/Dashboard-bg.jpg");
   background-size: cover;
@@ -100,4 +103,61 @@
 
 .form-btn:hover {
   background-color: #db2777;
+}
+
+/* --- NEW STYLES for the 'Add Category' feature --- */
+
+.category-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-select-wrapper select {
+  flex-grow: 1; /* Allows the select box to take up available space */
+}
+
+.add-category-btn {
+  background-color: #ec4899;
+  color: white;
+  border: none;
+  border-radius: 50%; /* Makes it a circle */
+  width: 38px; /* Fixed width */
+  height: 38px; /* Fixed height */
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0; /* Prevents the button from shrinking */
+  padding-bottom: 4px; /* Adjust for vertical alignment of '+' */
+  transition: background-color 0.3s ease;
+}
+
+.add-category-btn:hover {
+  background-color: #db2777;
+}
+
+.new-category-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: rgba(0,0,0,0.1);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.form-btn-small {
+  padding: 0.5rem 1rem;
+  background-color: #16a34a; /* Green color for save */
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-btn-small:hover {
+  background-color: #15803d;
 }
