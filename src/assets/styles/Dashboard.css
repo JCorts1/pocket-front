@@ -1,5 +1,8 @@
 .dashboard-container {
-  background-color: #b3caa8;
+  background-image: url("../img/Dashboard-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
   display: flex;
