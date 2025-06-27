@@ -2,21 +2,18 @@ import React, { useState, useEffect } from 'react';
 import '../assets/styles/Dashboard.css';
 
 const Dashboard = () => {
-  // Existing state
+  // All this state is correct
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState('');
-
-  // --- NEW STATE for creating a category ---
   const [showNewCategory, setShowNewCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
-  // -----------------------------------------
 
   const RAILS_API_URL = 'http://localhost:3000/api/v1';
 
-  // This useEffect for fetching categories is still correct
+  // This useEffect is correct and does not need changes
   useEffect(() => {
     const fetchCategories = async () => {
       const token = localStorage.getItem('token');
@@ -42,11 +39,9 @@ const Dashboard = () => {
       }
     };
     fetchCategories();
-  }, []); // The empty array dependency means this runs once on mount
+  }, []);
 
-  // --- NEW FUNCTION to handle creating a category ---
-  const handleCreateCategory = async (event) => {
-    event.preventDefault();
+  const handleCreateCategory = async () => { // No 'event' needed here
     const token = localStorage.getItem('token');
     if (!newCategoryName.trim()) {
       setMessage('Category name cannot be blank.');
@@ -66,11 +61,8 @@ const Dashboard = () => {
       const newCategory = await response.json();
 
       if (response.ok) {
-        // Add new category to our existing list
         setCategories([...categories, newCategory]);
-        // Automatically select the new category
         setCategoryId(newCategory.id);
-        // Hide the form and reset the name
         setShowNewCategory(false);
         setNewCategoryName('');
         setMessage(`Category "${newCategory.name}" created!`);
@@ -81,12 +73,39 @@ const Dashboard = () => {
       setMessage('Network error. Could not create category.');
     }
   };
-  // -----------------------------------------------
 
-  // This function for submitting an expense is still correct
   const handleSubmitExpense = async (event) => {
     event.preventDefault();
-    // ... (rest of the expense submission logic is unchanged)
+    setMessage('');
+    const token = localStorage.getItem('token');
+
+    if (!categoryId) {
+      setMessage('Please select a category.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${RAILS_API_URL}/expenses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify({ expense: { amount, description, category_id: categoryId } }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage('Expense logged successfully!');
+        setAmount('');
+        setDescription('');
+      } else {
+        setMessage(result.error || 'Failed to log expense.');
+      }
+    } catch (error) {
+      setMessage('Network error. Could not log expense.');
+    }
   };
 
   return (
@@ -94,6 +113,8 @@ const Dashboard = () => {
       <div className='expense-form-container'>
         <h2>Log a New Expense</h2>
         {message && <p className="form-message">{message}</p>}
+
+        {/* The main form for submitting an expense */}
         <form onSubmit={handleSubmitExpense}>
           <div className="form-group">
             <label htmlFor="amount">Amount</label>
@@ -127,7 +148,7 @@ const Dashboard = () => {
                 )}
               </select>
               <button
-                type="button"
+                type="button" // This prevents submitting the main form
                 className="add-category-btn"
                 onClick={() => setShowNewCategory(!showNewCategory)}
               >
@@ -136,9 +157,9 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* --- NEW CONDITIONAL FORM for adding a category --- */}
+          {/* This is no longer a <form>, it is now a <div> */}
           {showNewCategory && (
-            <form onSubmit={handleCreateCategory} className="new-category-form">
+            <div className="new-category-form">
               <input
                 type="text"
                 value={newCategoryName}
@@ -146,10 +167,12 @@ const Dashboard = () => {
                 placeholder="New category name"
                 required
               />
-              <button type="submit" className="form-btn-small">Save</button>
-            </form>
+              {/* This button is type="button" and calls the function directly */}
+              <button type="button" onClick={handleCreateCategory} className="form-btn-small">
+                Save
+              </button>
+            </div>
           )}
-          {/* -------------------------------------------------- */}
 
           <div className="form-group">
             <label htmlFor="description">Description</label>
