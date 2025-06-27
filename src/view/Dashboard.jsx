@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../assets/styles/Dashboard.css';
 
 const Dashboard = () => {
-  // All this state is correct
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -13,7 +12,6 @@ const Dashboard = () => {
 
   const RAILS_API_URL = 'http://localhost:3000/api/v1';
 
-  // This useEffect is correct and does not need changes
   useEffect(() => {
     const fetchCategories = async () => {
       const token = localStorage.getItem('token');
@@ -41,7 +39,7 @@ const Dashboard = () => {
     fetchCategories();
   }, []);
 
-  const handleCreateCategory = async () => { // No 'event' needed here
+  const handleCreateCategory = async () => {
     const token = localStorage.getItem('token');
     if (!newCategoryName.trim()) {
       setMessage('Category name cannot be blank.');
@@ -157,7 +155,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* This is no longer a <form>, it is now a <div> */}
           {showNewCategory && (
             <div className="new-category-form">
               <input
