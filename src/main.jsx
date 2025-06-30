@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import App from './App.jsx'
 import Dashboard from './view/Dashboard.jsx';
+import ExpensesIndex from './view/ExpensesIndex.jsx';
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
   {
     path: "dashboard",
     element: <Dashboard />
+  },
+  {
+    path: "expenses",
+    element: <ExpensesIndex />
   }
 ]);
 
