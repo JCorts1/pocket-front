@@ -1,0 +1,113 @@
+/* Sets the Poppins font for the whole app */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.expenses-index-background {
+  background-image: url("../img/Dashboard-bg.jpg"); /* Uses the same background */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh; /* Use min-height to allow scrolling */
+  padding: 2rem 0; /* Add some padding at top and bottom */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top to see start of list */
+  font-family: 'Poppins', sans-serif;
+  color: white;
+}
+
+/* This is the main container with the glassmorphism effect */
+.expenses-list-container {
+  width: 90%;
+  max-width: 800px; /* Wider for the list view */
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.expenses-header {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 1.5rem;
+}
+
+.expenses-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.expenses-header h2 {
+  margin: 0.25rem 0 0 0;
+  font-size: 1.5rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.category-container {
+  /* Changed to a lighter, semi-transparent background to fit the theme */
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.category-container h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 0.75rem;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.expense-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.expense-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.expense-description {
+  font-weight: 500;
+  margin: 0;
+}
+
+.expense-date {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin: 0.25rem 0 0 0;
+}
+
+.expense-amount {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  flex-shrink: 0; /* Prevents amount from wrapping */
+  padding-left: 1rem;
+}
