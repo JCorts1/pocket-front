@@ -45,7 +45,6 @@ const Dashboard = () => {
       setMessage('Category name cannot be blank.');
       return;
     }
-
     try {
       const response = await fetch(`${RAILS_API_URL}/categories`, {
         method: 'POST',
@@ -55,9 +54,7 @@ const Dashboard = () => {
         },
         body: JSON.stringify({ category: { name: newCategoryName } }),
       });
-
       const newCategory = await response.json();
-
       if (response.ok) {
         setCategories([...categories, newCategory]);
         setCategoryId(newCategory.id);
@@ -76,12 +73,10 @@ const Dashboard = () => {
     event.preventDefault();
     setMessage('');
     const token = localStorage.getItem('token');
-
     if (!categoryId) {
       setMessage('Please select a category.');
       return;
     }
-
     try {
       const response = await fetch(`${RAILS_API_URL}/expenses`, {
         method: 'POST',
@@ -91,9 +86,7 @@ const Dashboard = () => {
         },
         body: JSON.stringify({ expense: { amount, description, category_id: categoryId } }),
       });
-
       const result = await response.json();
-
       if (response.ok) {
         setMessage('Expense logged successfully!');
         setAmount('');
@@ -106,85 +99,78 @@ const Dashboard = () => {
     }
   };
 
+  // The component now starts with the 'expense-form-container' div.
+  // The outer background div has been removed.
   return (
-    <div className='dashboard-container'>
-      <div className='expense-form-container'>
-        <h2>Log a New Expense</h2>
-        {message && <p className="form-message">{message}</p>}
-
-        {/* The main form for submitting an expense */}
-        <form onSubmit={handleSubmitExpense}>
-          <div className="form-group">
-            <label htmlFor="amount">Amount</label>
+    <div className='expense-form-container'>
+      <h2>Log a New Expense</h2>
+      {message && <p className="form-message">{message}</p>}
+      <form onSubmit={handleSubmitExpense}>
+        <div className="form-group">
+          <label htmlFor="amount">Amount</label>
+          <input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.00"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="category">Category</label>
+          <div className="category-select-wrapper">
+            <select
+              id="category"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              required
+            >
+              {categories.length > 0 ? (
+                categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>Loading categories...</option>
+              )}
+            </select>
+            <button
+              type="button"
+              className="add-category-btn"
+              onClick={() => setShowNewCategory(!showNewCategory)}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        {showNewCategory && (
+          <div className="new-category-form">
             <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
+              type="text"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="New category name"
               required
             />
+            <button type="button" onClick={handleCreateCategory} className="form-btn-small">
+              Save
+            </button>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="category">Category</label>
-            <div className="category-select-wrapper">
-              <select
-                id="category"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                required
-              >
-                {categories.length > 0 ? (
-                  categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>Loading categories...</option>
-                )}
-              </select>
-              <button
-                type="button" // This prevents submitting the main form
-                className="add-category-btn"
-                onClick={() => setShowNewCategory(!showNewCategory)}
-              >
-                +
-              </button>
-            </div>
-          </div>
-
-          {showNewCategory && (
-            <div className="new-category-form">
-              <input
-                type="text"
-                value={newCategoryName}
-                onChange={(e) => setNewCategoryName(e.target.value)}
-                placeholder="New category name"
-                required
-              />
-              {/* This button is type="button" and calls the function directly */}
-              <button type="button" onClick={handleCreateCategory} className="form-btn-small">
-                Save
-              </button>
-            </div>
-          )}
-
-          <div className="form-group">
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., Coffee with a friend"
-              rows="3"
-            ></textarea>
-          </div>
-
-          <button className="form-btn" type="submit">Add Expense</button>
-        </form>
-      </div>
+        )}
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="e.g., Coffee with a friend"
+            rows="3"
+          ></textarea>
+        </div>
+        <button className="form-btn" type="submit">Add Expense</button>
+      </form>
     </div>
   );
 };

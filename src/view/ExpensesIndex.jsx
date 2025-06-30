@@ -59,46 +59,45 @@ const ExpensesIndex = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // The component now starts with the 'expenses-list-container' div.
+  // The outer background div has been removed.
   return (
-    <div className='expenses-index-background'>
-      <div className="expenses-list-container">
-        <div className="expenses-header">
-          <h1>My Expenses</h1>
-          <h2>Total: ${totalExpenses.toFixed(2)}</h2>
-        </div>
+    <div className="expenses-list-container">
+      <div className="expenses-header">
+        <h1>My Expenses</h1>
+        <h2>Total: ${totalExpenses.toFixed(2)}</h2>
+      </div>
 
-        {message && <p className="loading-message">{message}</p>}
+      {message && <p className="loading-message">{message}</p>}
 
-        <div className="category-grid">
-          {Object.keys(expensesByCategory).map(categoryName => (
-            <Drawer key={categoryName}>
-              <DrawerTrigger asChild>
-                <button className="category-trigger-btn">
-                  {categoryName}
-                </button>
-              </DrawerTrigger>
-              {/* --- The custom class is added here --- */}
-              <DrawerContent className="glass-drawer">
-                <div className="drawer-content-container">
-                  <DrawerHeader>
-                    <DrawerTitle>{categoryName}</DrawerTitle>
-                  </DrawerHeader>
-                  <div className="drawer-expenses-list">
-                    {expensesByCategory[categoryName].map(expense => (
-                      <div key={expense.id} className="expense-item">
-                        <div className="expense-details">
-                          <p className="expense-description">{expense.description || 'No description'}</p>
-                          <p className="expense-date">{formatDate(expense.created_at)}</p>
-                        </div>
-                        <p className="expense-amount">${parseFloat(expense.amount).toFixed(2)}</p>
+      <div className="category-grid">
+        {Object.keys(expensesByCategory).map(categoryName => (
+          <Drawer key={categoryName}>
+            <DrawerTrigger asChild>
+              <button className="category-trigger-btn">
+                {categoryName}
+              </button>
+            </DrawerTrigger>
+            <DrawerContent className="glass-drawer">
+              <div className="drawer-content-container">
+                <DrawerHeader>
+                  <DrawerTitle>{categoryName}</DrawerTitle>
+                </DrawerHeader>
+                <div className="drawer-expenses-list">
+                  {expensesByCategory[categoryName].map(expense => (
+                    <div key={expense.id} className="expense-item">
+                      <div className="expense-details">
+                        <p className="expense-description">{expense.description || 'No description'}</p>
+                        <p className="expense-date">{formatDate(expense.created_at)}</p>
                       </div>
-                    ))}
-                  </div>
+                      <p className="expense-amount">${parseFloat(expense.amount).toFixed(2)}</p>
+                    </div>
+                  ))}
                 </div>
-              </DrawerContent>
-            </Drawer>
-          ))}
-        </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ))}
       </div>
     </div>
   );

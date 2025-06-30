@@ -1,3 +1,25 @@
+.page-background {
+  background-image: url("./assets/img/Dashboard-bg.jpg"); /* A common background */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* This pushes the main content to the right of the navbar */
+.main-content {
+  margin-left: 250px; /* This MUST match your navbar's width */
+  width: calc(100% - 250px);
+  /* These styles center the content on the page */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
 .login-background {
   /* IMPORTANT: Make sure this path is correct for your project! */
   background-image: url('../src/assets/img/home-background.jpg');
