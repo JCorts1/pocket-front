@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
 import './App.css';
 import logo from '../src/assets/img/logo.jpg';
 
-// These form components are defined outside the main App component
-// to prevent them from losing focus when the App component re-renders.
+
 const LoginForm = ({ email, password, setEmail, setPassword, handleSubmit }) => (
   <form onSubmit={handleSubmit}>
     <h2>Login</h2>

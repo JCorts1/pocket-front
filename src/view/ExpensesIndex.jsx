@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import '../assets/styles/ExpensesIndex.css'; // Make sure path is correct
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import '../assets/styles/ExpensesIndex.css';
 
 const ExpensesIndex = () => {
   const [expensesByCategory, setExpensesByCategory] = useState({});
@@ -15,20 +22,16 @@ const ExpensesIndex = () => {
         setMessage('You must be logged in to view expenses.');
         return;
       }
-
       try {
         const response = await fetch(`${RAILS_API_URL}/expenses`, {
           headers: { 'Authorization': token },
         });
-
         if (response.ok) {
           const expenses = await response.json();
-
           if (expenses.length === 0) {
             setMessage('You have not logged any expenses yet.');
             return;
           }
-
           const grouped = expenses.reduce((acc, expense) => {
             const categoryName = expense.category.name;
             if (!acc[categoryName]) {
@@ -37,9 +40,7 @@ const ExpensesIndex = () => {
             acc[categoryName].push(expense);
             return acc;
           }, {});
-
           const total = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
-
           setExpensesByCategory(grouped);
           setTotalExpenses(total);
           setMessage('');
@@ -50,7 +51,6 @@ const ExpensesIndex = () => {
         setMessage('Network error while fetching expenses.');
       }
     };
-
     fetchExpenses();
   }, []);
 
@@ -61,7 +61,6 @@ const ExpensesIndex = () => {
 
   return (
     <div className='expenses-index-background'>
-      {/* This new wrapper will get the glass effect */}
       <div className="expenses-list-container">
         <div className="expenses-header">
           <h1>My Expenses</h1>
@@ -70,20 +69,34 @@ const ExpensesIndex = () => {
 
         {message && <p className="loading-message">{message}</p>}
 
-        <div className="expenses-list">
+        <div className="category-grid">
           {Object.keys(expensesByCategory).map(categoryName => (
-            <div key={categoryName} className="category-container">
-              <h3>{categoryName}</h3>
-              {expensesByCategory[categoryName].map(expense => (
-                <div key={expense.id} className="expense-item">
-                  <div className="expense-details">
-                    <p className="expense-description">{expense.description || 'No description'}</p>
-                    <p className="expense-date">{formatDate(expense.created_at)}</p>
+            <Drawer key={categoryName}>
+              <DrawerTrigger asChild>
+                <button className="category-trigger-btn">
+                  {categoryName}
+                </button>
+              </DrawerTrigger>
+              {/* --- The custom class is added here --- */}
+              <DrawerContent className="glass-drawer">
+                <div className="drawer-content-container">
+                  <DrawerHeader>
+                    <DrawerTitle>{categoryName}</DrawerTitle>
+                  </DrawerHeader>
+                  <div className="drawer-expenses-list">
+                    {expensesByCategory[categoryName].map(expense => (
+                      <div key={expense.id} className="expense-item">
+                        <div className="expense-details">
+                          <p className="expense-description">{expense.description || 'No description'}</p>
+                          <p className="expense-date">{formatDate(expense.created_at)}</p>
+                        </div>
+                        <p className="expense-amount">${parseFloat(expense.amount).toFixed(2)}</p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="expense-amount">${parseFloat(expense.amount).toFixed(2)}</p>
                 </div>
-              ))}
-            </div>
+              </DrawerContent>
+            </Drawer>
           ))}
         </div>
       </div>
