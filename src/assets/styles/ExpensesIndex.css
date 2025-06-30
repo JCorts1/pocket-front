@@ -2,38 +2,39 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 .expenses-index-background {
-  background-image: url("../img/Dashboard-bg.jpg"); /* Uses the same background */
+  background-image: url("../img/Dashboard-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   width: 100%;
-  min-height: 100vh; /* Use min-height to allow scrolling */
-  padding: 2rem 0; /* Add some padding at top and bottom */
+  min-height: 100vh;
+  padding: 2rem;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align to top to see start of list */
+  /* --- FIX 1: Changed align-items to 'center' for vertical centering --- */
+  align-items: center;
   font-family: 'Poppins', sans-serif;
-  color: white;
 }
 
-/* This is the main container with the glassmorphism effect */
 .expenses-list-container {
   width: 90%;
-  max-width: 800px; /* Wider for the list view */
+  max-width: 800px;
   padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 .expenses-header {
   padding-bottom: 1rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 1.5rem;
+  color: #2d3748;
+  text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.4);
 }
 
 .expenses-header h1 {
@@ -52,27 +53,43 @@
   text-align: center;
   font-size: 1.2rem;
   padding: 2rem;
+  color: #2d3748;
 }
 
-.expenses-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
 }
 
-.category-container {
-  /* Changed to a lighter, semi-transparent background to fit the theme */
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-}
-
-.category-container h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.25rem;
+.category-trigger-btn {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  padding-bottom: 0.75rem;
+  text-align: center;
+  color: #374151;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.category-trigger-btn:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.drawer-content-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 2rem 1.5rem;
+}
+
+.drawer-expenses-list {
+  margin-top: 1rem;
 }
 
 .expense-item {
@@ -80,12 +97,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .expense-item:last-child {
   border-bottom: none;
-  padding-bottom: 0;
 }
 
 .expense-details {
@@ -95,19 +111,59 @@
 
 .expense-description {
   font-weight: 500;
+  color: #1f2937;
   margin: 0;
 }
 
 .expense-date {
   font-size: 0.875rem;
-  opacity: 0.8;
+  color: #6b7280;
   margin: 0.25rem 0 0 0;
 }
 
 .expense-amount {
   font-size: 1.125rem;
   font-weight: 600;
+  color: #1f2937;
   margin: 0;
-  flex-shrink: 0; /* Prevents amount from wrapping */
+  flex-shrink: 0;
   padding-left: 1rem;
+}
+
+/* --- STYLES TO MAKE THE SHADCN DRAWER TRANSPARENT --- */
+
+/* --- FIX 2: Target the drawer's overlay and make it transparent --- */
+[data-vaul-overlay] {
+  background: transparent !important;
+}
+
+.glass-drawer {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  color: #1f2937;
+}
+
+.glass-drawer > div:first-child {
+  background-color: rgba(45, 55, 72, 0.5) !important;
+}
+
+.glass-drawer [data-vaul-drawer-title] {
+  color: #111827;
+}
+
+.glass-drawer .expense-item {
+  border-bottom-color: rgba(45, 55, 72, 0.2);
+}
+
+.glass-drawer .expense-description {
+  color: #1f2937;
+}
+
+.glass-drawer .expense-date {
+  color: #4b5563;
+}
+
+.glass-drawer .expense-amount {
+  color: #111827;
 }
