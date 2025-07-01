@@ -12,7 +12,6 @@
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  /* --- FIX 1: Changed align-items to 'center' for vertical centering --- */
   align-items: center;
   font-family: 'Poppins', sans-serif;
 }
@@ -30,7 +29,7 @@
 }
 
 .expenses-header {
-  padding-bottom: 1rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   margin-bottom: 1.5rem;
   color: #2d3748;
@@ -38,22 +37,61 @@
 }
 
 .expenses-header h1 {
-  margin: 0;
+  margin: 0 0 1.5rem 0;
   font-size: 2.5rem;
+  text-align: center;
 }
 
-.expenses-header h2 {
-  margin: 0.25rem 0 0 0;
-  font-size: 1.5rem;
-  font-weight: 400;
+/* --- NEW STYLES for the summary grid --- */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+
+.summary-label {
+  font-size: 1rem;
+  font-weight: 500;
   opacity: 0.9;
 }
+
+.summary-value {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.25rem 0 0 0;
+}
+
+/* --- NEW STYLES for the balance colors --- */
+.balance-green {
+  color: #15803d; /* Dark Green */
+}
+
+.balance-yellow {
+  color: #ca8a04; /* Dark Yellow */
+}
+
+.balance-red {
+  color: #b91c1c; /* Dark Red */
+}
+
 
 .loading-message {
   text-align: center;
   font-size: 1.2rem;
   padding: 2rem;
   color: #2d3748;
+}
+
+.category-section {
+  margin-top: 2rem;
+}
+
+.category-section h2 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .category-grid {
@@ -130,9 +168,6 @@
   padding-left: 1rem;
 }
 
-/* --- STYLES TO MAKE THE SHADCN DRAWER TRANSPARENT --- */
-
-/* --- FIX 2: Target the drawer's overlay and make it transparent --- */
 [data-vaul-overlay] {
   background: transparent !important;
 }
