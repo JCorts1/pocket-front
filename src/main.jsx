@@ -8,7 +8,8 @@ import {
 import App from './App.jsx';
 import Dashboard from './view/Dashboard.jsx';
 import ExpensesIndex from './view/ExpensesIndex.jsx';
-import Layout from './components/Layout.jsx'; // Import the new Layout
+import AddIncome from './view/AddIncome.jsx'; // 1. Import the new AddIncome component
+import Layout from './components/Layout.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,11 @@ const router = createBrowserRouter([
     path: "expenses",
     // Wrap the Expenses page with the Layout component
     element: <Layout><ExpensesIndex /></Layout>
+  },
+  // --- 2. ADD THE NEW ROUTE FOR THE INCOME PAGE ---
+  {
+    path: "income",
+    element: <Layout><AddIncome /></Layout>
   }
 ]);
 
