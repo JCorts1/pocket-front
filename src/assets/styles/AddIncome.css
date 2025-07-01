@@ -1,0 +1,92 @@
+/* This is the complete and corrected CSS for your Add Income page. */
+
+/* Sets the Poppins font for the whole app */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.income-form-container {
+  width: 90%;
+  max-width: 450px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); /* For Safari */
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  color: white; /* This sets the default text color (like for labels) to white */
+}
+
+.income-form-container h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.income-form-container input,
+.income-form-container textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #333; /* Dark text for better readability inside the input */
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+.income-form-container input::placeholder,
+.income-form-container textarea::placeholder {
+  color: #333;
+  opacity: 0.7;
+}
+
+.income-form-container input:focus,
+.income-form-container textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  caret-color: #ec4899;
+}
+
+/* Style for API/form messages */
+.form-message {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(236, 72, 153, 0.5); /* Semi-transparent pink */
+  border: 1px solid rgba(236, 72, 153, 0.8);
+}
+
+.form-btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1.5rem;
+  background-color: #ec4899;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-btn:hover {
+  background-color: #db2777;
+}
