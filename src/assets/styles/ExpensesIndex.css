@@ -42,56 +42,22 @@
   text-align: center;
 }
 
-/* --- NEW STYLES for the summary grid --- */
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  text-align: center;
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.summary-label {
-  font-size: 1rem;
-  font-weight: 500;
-  opacity: 0.9;
-}
-
-.summary-value {
-  font-size: 2rem;
+.total-expenses {
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0.25rem 0 0 0;
 }
-
-/* --- NEW STYLES for the balance colors --- */
-.balance-green {
-  color: #15803d; /* Dark Green */
-}
-
-.balance-yellow {
-  color: #ca8a04; /* Dark Yellow */
-}
-
-.balance-red {
-  color: #b91c1c; /* Dark Red */
-}
-
 
 .loading-message {
   text-align: center;
   font-size: 1.2rem;
   padding: 2rem;
   color: #2d3748;
-}
-
-.category-section {
-  margin-top: 2rem;
-}
-
-.category-section h2 {
-  font-size: 1.5rem;
-  color: #2d3748;
-  margin-bottom: 1rem;
-  text-align: center;
 }
 
 .category-grid {
@@ -202,3 +168,17 @@
 .glass-drawer .expense-amount {
   color: #111827;
 }
+
+/* We still need to style the trigger button */
+#date {
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #374151 !important;
+  font-weight: 600;
+}
+
+#date:hover {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* All the old .glass-calendar styles have been removed. */

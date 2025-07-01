@@ -8,25 +8,23 @@ import {
 import App from './App.jsx';
 import Dashboard from './view/Dashboard.jsx';
 import ExpensesIndex from './view/ExpensesIndex.jsx';
-import AddIncome from './view/AddIncome.jsx'; // 1. Import the new AddIncome component
+import AddIncome from './view/AddIncome.jsx';
 import Layout from './components/Layout.jsx';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Login page does not have the navbar
+    element: <App />, // The login page does not use the Layout.
   },
   {
     path: "dashboard",
-    // Wrap the Dashboard page with the Layout component
+    // All protected pages are now wrapped in the Layout component.
     element: <Layout><Dashboard /></Layout>
   },
   {
     path: "expenses",
-    // Wrap the Expenses page with the Layout component
     element: <Layout><ExpensesIndex /></Layout>
   },
-  // --- 2. ADD THE NEW ROUTE FOR THE INCOME PAGE ---
   {
     path: "income",
     element: <Layout><AddIncome /></Layout>
