@@ -115,7 +115,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-
+    /*
+      THE FIX: The `bg-background` class, which applies a solid white
+      background, has been removed from this line. The body will now
+      be transparent by default, allowing our page-specific background
+      images to be visible.
+    */
     @apply text-foreground;
   }
 }
