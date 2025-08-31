@@ -235,50 +235,42 @@
   height: 18px;
 }
 
-/* Budget Form Modal */
-.budget-form-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
+/* Budget Drawer Styles */
+.budget-drawer {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 -8px 32px 0 rgba(0, 0, 0, 0.2) !important;
 }
 
-.budget-form {
-  width: 90%;
-  max-width: 500px;
-  padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 1.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 20px 60px 0 rgba(0, 0, 0, 0.3);
+.budget-drawer-container {
+  padding: 1.5rem 2rem 2rem 2rem;
   font-family: 'Poppins', sans-serif;
-  position: relative;
-  z-index: 1001;
-  transform: scale(1.02);
 }
 
-.budget-form h3 {
-  margin: 0 0 1.5rem 0;
-  color: #2d3748;
-  text-align: center;
-  font-size: 1.75rem;
-  font-weight: 700;
-  text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.4);
+.budget-drawer h2 {
+  color: #2d3748 !important;
+  text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.4) !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
 }
 
-.form-group {
+.budget-drawer p {
+  color: #4a5568 !important;
+  font-size: 0.875rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.budget-drawer-form {
+  margin-top: 1rem;
+}
+
+.budget-drawer-form .form-group {
   margin-bottom: 1rem;
 }
 
-.form-group label {
+.budget-drawer-form .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   color: #2d3748;
@@ -286,8 +278,8 @@
   text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.4);
 }
 
-.form-group input,
-.form-group select {
+.budget-drawer-form .form-group input,
+.budget-drawer-form .form-group select {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -299,28 +291,28 @@
   box-sizing: border-box;
 }
 
-.form-group input::placeholder {
+.budget-drawer-form .form-group input::placeholder {
   color: #333;
   opacity: 0.7;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.budget-drawer-form .form-group input:focus,
+.budget-drawer-form .form-group select:focus {
   outline: none;
   border-color: rgba(255, 255, 255, 0.7);
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
   caret-color: #ec4899;
 }
 
-.form-actions {
+.budget-drawer-form .form-actions {
   display: flex;
   gap: 1rem;
   justify-content: center;
   margin-top: 1.5rem;
 }
 
-.form-btn {
-  padding: 0.75rem 1.5rem;
+.budget-drawer-form .form-btn {
+  padding: 0.75rem 1.5rem 1rem 1.5rem;
   background: #ec4899;
   color: white;
   border: none;
@@ -330,28 +322,12 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   font-family: 'Poppins', sans-serif;
+  width: auto;
+  max-width: 180px;
 }
 
-.form-btn:hover {
+.budget-drawer-form .form-btn:hover {
   background: #db2777;
-}
-
-.form-btn-cancel {
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  color: #2d3748;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 0.5rem;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Poppins', sans-serif;
-}
-
-.form-btn-cancel:hover {
-  background: rgba(255, 255, 255, 0.3);
-  color: #1f2937;
 }
 
 /* Budget List */
@@ -559,5 +535,20 @@
   .add-budget-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .budget-drawer-container {
+    padding: 1rem 1.5rem 2rem 1.5rem !important;
+  }
+
+  .budget-drawer-form .form-group input,
+  .budget-drawer-form .form-group select {
+    padding: 0.625rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  .budget-drawer-form .form-btn {
+    width: 100% !important;
+    padding: 0.875rem !important;
   }
 }
