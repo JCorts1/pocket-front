@@ -226,16 +226,16 @@ const Budget = () => {
             <div className="dashboard-stats">
               <div className="stat-item">
                 <span className="stat-label">Total Budget</span>
-                <span className="stat-value">${dashboard.total_budget?.toFixed(2) || '0.00'}</span>
+                <span className="stat-value">${(parseFloat(dashboard.total_budget) || 0).toFixed(2)}</span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Total Spending</span>
-                <span className="stat-value">${dashboard.total_spending?.toFixed(2) || '0.00'}</span>
+                <span className="stat-value">${(parseFloat(dashboard.total_spending) || 0).toFixed(2)}</span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Remaining</span>
-                <span className={`stat-value ${dashboard.remaining_budget >= 0 ? 'positive' : 'negative'}`}>
-                  ${dashboard.remaining_budget?.toFixed(2) || '0.00'}
+                <span className={`stat-value ${(parseFloat(dashboard.remaining_budget) || 0) >= 0 ? 'positive' : 'negative'}`}>
+                  ${(parseFloat(dashboard.remaining_budget) || 0).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -243,10 +243,10 @@ const Budget = () => {
               <div className="progress-bar">
                 <div 
                   className={`progress-fill ${getStatusColor(dashboard.budget_health)}`}
-                  style={{ width: `${Math.min(dashboard.spending_percentage || 0, 100)}%` }}
+                  style={{ width: `${Math.min(parseFloat(dashboard.spending_percentage) || 0, 100)}%` }}
                 ></div>
               </div>
-              <span className="progress-text">{dashboard.spending_percentage?.toFixed(1) || '0.0'}% used</span>
+              <span className="progress-text">{(parseFloat(dashboard.spending_percentage) || 0).toFixed(1)}% used</span>
             </div>
           </div>
 
@@ -255,7 +255,7 @@ const Budget = () => {
               <h4>⚠️ Budget Alerts</h4>
               {dashboard.alerts.map((alert, index) => (
                 <div key={index} className={`alert alert-${getStatusColor(alert.status)}`}>
-                  <strong>{alert.category_name}</strong>: {alert.spending_percentage}% of budget used
+                  <strong>{alert.category_name}</strong>: {(parseFloat(alert.spending_percentage) || 0).toFixed(1)}% of budget used
                 </div>
               ))}
             </div>
@@ -348,11 +348,11 @@ const Budget = () => {
           </div>
         ) : (
           <div className="budgets-grid">
-            {budgets.map(budget => (
+            {budgets.filter(budget => budget && budget.id).map(budget => (
               <div key={budget.id} className={`budget-card ${getStatusColor(budget.budget_status)}`}>
                 <div className="budget-card-header">
                   {getStatusIcon(budget.budget_status)}
-                  <h4>{budget.category.name}</h4>
+                  <h4>{budget.category?.name || 'Unknown Category'}</h4>
                   <div className="budget-card-actions">
                     <Drawer>
                       <DrawerTrigger asChild>
@@ -363,7 +363,7 @@ const Budget = () => {
                       <DrawerContent className="budget-drawer">
                         <div className="budget-drawer-container">
                           <DrawerHeader>
-                            <DrawerTitle>Edit Budget for {budget.category.name}</DrawerTitle>
+                            <DrawerTitle>Edit Budget for {budget.category?.name || 'Unknown Category'}</DrawerTitle>
                             <DrawerDescription>
                               Update your monthly spending limit
                             </DrawerDescription>
@@ -403,11 +403,11 @@ const Budget = () => {
                   <div className="budget-amounts">
                     <div className="amount-item">
                       <span className="amount-label">Spent</span>
-                      <span className="amount-value">${budget.current_spending?.toFixed(2)}</span>
+                      <span className="amount-value">${(parseFloat(budget.current_spending) || 0).toFixed(2)}</span>
                     </div>
                     <div className="amount-item">
                       <span className="amount-label">Budget</span>
-                      <span className="amount-value">${budget.monthly_limit?.toFixed(2)}</span>
+                      <span className="amount-value">${(parseFloat(budget.monthly_limit) || 0).toFixed(2)}</span>
                     </div>
                   </div>
                   
@@ -415,13 +415,13 @@ const Budget = () => {
                     <div className="progress-bar">
                       <div 
                         className={`progress-fill ${getStatusColor(budget.budget_status)}`}
-                        style={{ width: `${Math.min(budget.spending_percentage || 0, 100)}%` }}
+                        style={{ width: `${Math.min(parseFloat(budget.spending_percentage) || 0, 100)}%` }}
                       ></div>
                     </div>
                     <div className="progress-info">
-                      <span>{budget.spending_percentage?.toFixed(1)}% used</span>
-                      <span className={budget.remaining_budget >= 0 ? 'positive' : 'negative'}>
-                        ${Math.abs(budget.remaining_budget || 0).toFixed(2)} {budget.remaining_budget >= 0 ? 'left' : 'over'}
+                      <span>{(parseFloat(budget.spending_percentage) || 0).toFixed(1)}% used</span>
+                      <span className={(parseFloat(budget.remaining_budget) || 0) >= 0 ? 'positive' : 'negative'}>
+                        ${Math.abs(parseFloat(budget.remaining_budget) || 0).toFixed(2)} {(parseFloat(budget.remaining_budget) || 0) >= 0 ? 'left' : 'over'}
                       </span>
                     </div>
                   </div>
