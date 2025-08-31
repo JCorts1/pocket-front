@@ -20,6 +20,29 @@
   box-sizing: border-box;
 }
 
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1rem !important;
+    padding-bottom: 90px !important; /* Space for bottom navbar */
+    min-height: calc(100vh - 90px) !important;
+    align-items: flex-start !important;
+    padding-top: 2rem !important;
+  }
+
+  .form-container {
+    width: 95% !important;
+    padding: 2rem !important;
+    margin: 0 !important;
+  }
+
+  .page-background {
+    padding: 0 !important;
+  }
+}
+
 .login-background {
   /* IMPORTANT: Make sure this path is correct for your project! */
   background-image: url('../src/assets/img/home-background.jpg');
