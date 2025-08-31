@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Target, AlertTriangle, CheckCircle, TrendingUp, Plus, Edit2, Trash2 } from 'lucide-react';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import '../assets/styles/Budget.css';
 
 const Budget = () => {
   const [budgets, setBudgets] = useState([]);
   const [categories, setCategories] = useState([]);
   const [dashboard, setDashboard] = useState(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [editingBudget, setEditingBudget] = useState(null);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -97,7 +103,6 @@ const Budget = () => {
           month: new Date().getMonth() + 1,
           year: new Date().getFullYear()
         });
-        setShowAddForm(false);
         fetchData();
       } else {
         const error = await response.json();
@@ -128,7 +133,6 @@ const Budget = () => {
 
       if (response.ok) {
         setMessage('Budget updated successfully!');
-        setEditingBudget(null);
         fetchData();
       } else {
         setMessage('Error updating budget.');
@@ -259,80 +263,79 @@ const Budget = () => {
         </div>
       )}
 
-      {/* Add Budget Button */}
+      {/* Add Budget Drawer */}
       <div className="budget-actions">
-        <button 
-          className="add-budget-btn"
-          onClick={() => setShowAddForm(true)}
-        >
-          <Plus className="btn-icon" />
-          Add New Budget
-        </button>
+        <Drawer>
+          <DrawerTrigger asChild>
+            <button className="add-budget-btn">
+              <Plus className="btn-icon" />
+              Add New Budget
+            </button>
+          </DrawerTrigger>
+          <DrawerContent className="budget-drawer">
+            <div className="budget-drawer-container">
+              <DrawerHeader>
+                <DrawerTitle>Create New Budget</DrawerTitle>
+                <DrawerDescription>
+                  Set monthly spending limits to track your financial goals
+                </DrawerDescription>
+              </DrawerHeader>
+              <form onSubmit={handleCreateBudget} className="budget-drawer-form">
+                <div className="form-group">
+                  <label>Category</label>
+                  <select
+                    value={newBudget.category_id}
+                    onChange={(e) => setNewBudget({...newBudget, category_id: e.target.value})}
+                    required
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map(category => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Monthly Limit</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={newBudget.monthly_limit}
+                    onChange={(e) => setNewBudget({...newBudget, monthly_limit: e.target.value})}
+                    placeholder="Enter amount"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Month</label>
+                  <select
+                    value={newBudget.month}
+                    onChange={(e) => setNewBudget({...newBudget, month: parseInt(e.target.value)})}
+                  >
+                    {monthNames.map((name, index) => (
+                      <option key={index} value={index + 1}>{name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Year</label>
+                  <input
+                    type="number"
+                    value={newBudget.year}
+                    onChange={(e) => setNewBudget({...newBudget, year: parseInt(e.target.value)})}
+                    min="2023"
+                    max="2030"
+                  />
+                </div>
+                <div className="form-actions">
+                  <button type="submit" className="form-btn">Create Budget</button>
+                </div>
+              </form>
+            </div>
+          </DrawerContent>
+        </Drawer>
       </div>
-
-      {/* Add Budget Form */}
-      {showAddForm && (
-        <div className="budget-form-overlay">
-          <div className="budget-form">
-            <h3>Create New Budget</h3>
-            <form onSubmit={handleCreateBudget}>
-              <div className="form-group">
-                <label>Category</label>
-                <select
-                  value={newBudget.category_id}
-                  onChange={(e) => setNewBudget({...newBudget, category_id: e.target.value})}
-                  required
-                >
-                  <option value="">Select a category</option>
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Monthly Limit</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={newBudget.monthly_limit}
-                  onChange={(e) => setNewBudget({...newBudget, monthly_limit: e.target.value})}
-                  placeholder="Enter amount"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Month</label>
-                <select
-                  value={newBudget.month}
-                  onChange={(e) => setNewBudget({...newBudget, month: parseInt(e.target.value)})}
-                >
-                  {monthNames.map((name, index) => (
-                    <option key={index} value={index + 1}>{name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Year</label>
-                <input
-                  type="number"
-                  value={newBudget.year}
-                  onChange={(e) => setNewBudget({...newBudget, year: parseInt(e.target.value)})}
-                  min="2023"
-                  max="2030"
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="form-btn">Create Budget</button>
-                <button type="button" className="form-btn-cancel" onClick={() => setShowAddForm(false)}>
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Budget List */}
       <div className="budgets-section">
@@ -351,12 +354,42 @@ const Budget = () => {
                   {getStatusIcon(budget.budget_status)}
                   <h4>{budget.category.name}</h4>
                   <div className="budget-card-actions">
-                    <button 
-                      className="action-btn"
-                      onClick={() => setEditingBudget(budget)}
-                    >
-                      <Edit2 size={16} />
-                    </button>
+                    <Drawer>
+                      <DrawerTrigger asChild>
+                        <button className="action-btn">
+                          <Edit2 size={16} />
+                        </button>
+                      </DrawerTrigger>
+                      <DrawerContent className="budget-drawer">
+                        <div className="budget-drawer-container">
+                          <DrawerHeader>
+                            <DrawerTitle>Edit Budget for {budget.category.name}</DrawerTitle>
+                            <DrawerDescription>
+                              Update your monthly spending limit
+                            </DrawerDescription>
+                          </DrawerHeader>
+                          <form onSubmit={(e) => {
+                            e.preventDefault();
+                            const formData = new FormData(e.target);
+                            handleUpdateBudget(budget.id, formData.get('monthly_limit'));
+                          }} className="budget-drawer-form">
+                            <div className="form-group">
+                              <label>Monthly Limit</label>
+                              <input
+                                name="monthly_limit"
+                                type="number"
+                                step="0.01"
+                                defaultValue={budget.monthly_limit}
+                                required
+                              />
+                            </div>
+                            <div className="form-actions">
+                              <button type="submit" className="form-btn">Update Budget</button>
+                            </div>
+                          </form>
+                        </div>
+                      </DrawerContent>
+                    </Drawer>
                     <button 
                       className="action-btn delete"
                       onClick={() => handleDeleteBudget(budget.id)}
@@ -399,36 +432,6 @@ const Budget = () => {
         )}
       </div>
 
-      {/* Edit Budget Modal */}
-      {editingBudget && (
-        <div className="budget-form-overlay">
-          <div className="budget-form">
-            <h3>Edit Budget for {editingBudget.category.name}</h3>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              handleUpdateBudget(editingBudget.id, formData.get('monthly_limit'));
-            }}>
-              <div className="form-group">
-                <label>Monthly Limit</label>
-                <input
-                  name="monthly_limit"
-                  type="number"
-                  step="0.01"
-                  defaultValue={editingBudget.monthly_limit}
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="form-btn">Update Budget</button>
-                <button type="button" className="form-btn-cancel" onClick={() => setEditingBudget(null)}>
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
