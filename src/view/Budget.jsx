@@ -50,6 +50,9 @@ const Budget = () => {
         const budgetsData = await budgetsResponse.json();
         const dashboardData = await dashboardResponse.json();
         
+        // Quick debug check
+        console.log('Budget categories:', budgetsData.map(b => ({id: b.id, category: b.category})));
+        
         setBudgets(budgetsData);
         setDashboard(dashboardData);
         setMessage('');
@@ -97,12 +100,16 @@ const Budget = () => {
 
       if (response.ok) {
         setMessage('Budget created successfully!');
+        
+        // Reset form first
         setNewBudget({
           category_id: '',
           monthly_limit: '',
           month: new Date().getMonth() + 1,
           year: new Date().getFullYear()
         });
+        
+        // Refresh all data to ensure consistency
         fetchData();
       } else {
         const error = await response.json();
