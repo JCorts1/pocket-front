@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Camera, Loader2, AlertCircle, CheckCircle, Edit } from 'lucide-react';
 import CameraCapture from './CameraCapture';
 
-const ReceiptScanner = ({ onExpenseCreated, categories }) => {
-  const [showCamera, setShowCamera] = useState(false);
+const ReceiptScanner = ({ onExpenseCreated, categories, autoStart = false }) => {
+  const [showCamera, setShowCamera] = useState(autoStart);
   const [isProcessing, setIsProcessing] = useState(false);
   const [scanResult, setScanResult] = useState(null);
   const [error, setError] = useState(null);
@@ -124,7 +124,7 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
   }
 
   return (
-    <div className="receipt-scanner-container bg-white rounded-lg shadow-md p-6 mb-6">
+    <div className="receipt-scanner-container">
       <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
         <Camera size={24} />
         Scan Receipt
@@ -137,7 +137,7 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
           </p>
           <button
             onClick={() => setShowCamera(true)}
-            className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600"
+            className="glass-btn"
           >
             <Camera size={20} />
             Scan Receipt
@@ -146,22 +146,22 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
       )}
 
       {isProcessing && (
-        <div className="text-center py-8">
-          <Loader2 className="animate-spin mx-auto mb-4" size={48} />
-          <p className="text-gray-600">Processing receipt...</p>
+        <div className="loading-container">
+          <Loader2 className="spinner animate-spin mx-auto mb-4" size={48} />
+          <p>Processing receipt...</p>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-          <div className="flex items-center gap-2 text-red-700">
+        <div className="message-container message-error">
+          <div className="flex items-center gap-2">
             <AlertCircle size={20} />
             <span className="font-medium">Error</span>
           </div>
-          <p className="text-red-600 mt-1">{error}</p>
+          <p className="mt-1">{error}</p>
           <button
             onClick={resetScanner}
-            className="mt-2 text-red-600 underline hover:text-red-700"
+            className="glass-btn glass-btn-secondary mt-2"
           >
             Try Again
           </button>
@@ -171,31 +171,43 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
       {scanResult && (
         <div className="space-y-4">
           {/* Confidence and Review Status */}
-          <div className="flex items-center justify-between bg-gray-50 rounded-lg p-3">
-            <div className="flex items-center gap-2">
+          <div className="confidence-indicator">
+            <div className="status">
               {scanResult.needs_review ? (
                 <AlertCircle className="text-yellow-500" size={20} />
               ) : (
                 <CheckCircle className="text-green-500" size={20} />
               )}
-              <span className="text-sm font-medium">
+              <span>
                 {scanResult.needs_review ? 'Needs Review' : 'Ready to Save'}
               </span>
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="percentage">
               Confidence: {formatConfidence(scanResult.ocr_confidence)}%
             </div>
           </div>
 
           {/* Extracted Data */}
-          <div className="border rounded-lg p-4 bg-gray-50">
-            <h3 className="font-medium mb-2">Extracted Information:</h3>
-            <div className="text-sm space-y-1">
-              <p><span className="font-medium">Merchant:</span> {scanResult.receipt_data.merchant}</p>
-              <p><span className="font-medium">Total:</span> ${scanResult.receipt_data.total.toFixed(2)}</p>
-              <p><span className="font-medium">Date:</span> {scanResult.receipt_data.date}</p>
+          <div className="extracted-data">
+            <h3>Extracted Information:</h3>
+            <div className="space-y-1">
+              <div className="data-row">
+                <span className="data-label">Merchant:</span>
+                <span className="data-value">{scanResult.receipt_data.merchant}</span>
+              </div>
+              <div className="data-row">
+                <span className="data-label">Total:</span>
+                <span className="data-value">€{scanResult.receipt_data.total.toFixed(2)}</span>
+              </div>
+              <div className="data-row">
+                <span className="data-label">Date:</span>
+                <span className="data-value">{scanResult.receipt_data.date}</span>
+              </div>
               {scanResult.receipt_data.items && scanResult.receipt_data.items.length > 0 && (
-                <p><span className="font-medium">Items:</span> {scanResult.receipt_data.items.length} item(s)</p>
+                <div className="data-row">
+                  <span className="data-label">Items:</span>
+                  <span className="data-value">{scanResult.receipt_data.items.length} item(s)</span>
+                </div>
               )}
             </div>
           </div>
@@ -206,7 +218,7 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
               <h3 className="font-medium">Expense Details</h3>
               <button
                 onClick={() => setEditMode(!editMode)}
-                className="flex items-center gap-1 text-blue-500 hover:text-blue-600"
+                className="glass-btn glass-btn-secondary"
               >
                 <Edit size={16} />
                 {editMode ? 'Cancel Edit' : 'Edit'}
@@ -214,34 +226,34 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
             </div>
 
             {editMode ? (
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Amount</label>
+              <div className="glass-form">
+                <div className="form-group">
+                  <label>Amount</label>
                   <input
                     type="number"
                     step="0.01"
                     value={formData.amount}
                     onChange={(e) => handleInputChange('amount', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="glass-input"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Description</label>
+                <div className="form-group">
+                  <label>Description</label>
                   <input
                     type="text"
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="glass-input"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Category</label>
+                <div className="form-group">
+                  <label>Category</label>
                   <select
                     value={formData.category_id}
                     onChange={(e) => handleInputChange('category_id', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2"
+                    className="glass-select"
                   >
                     <option value="">Select a category</option>
                     {categories.map(category => (
@@ -253,28 +265,37 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
                 </div>
               </div>
             ) : (
-              <div className="space-y-2 bg-gray-50 rounded-md p-3">
-                <p><span className="font-medium">Amount:</span> ${formData.amount}</p>
-                <p><span className="font-medium">Description:</span> {formData.description}</p>
-                <p><span className="font-medium">Category:</span> {
-                  categories.find(c => c.id.toString() === formData.category_id)?.name || 'Unknown'
-                }</p>
+              <div className="static-display">
+                <div className="display-row">
+                  <span className="display-label">Amount:</span>
+                  <span className="display-value">€{formData.amount}</span>
+                </div>
+                <div className="display-row">
+                  <span className="display-label">Description:</span>
+                  <span className="display-value">{formData.description}</span>
+                </div>
+                <div className="display-row">
+                  <span className="display-label">Category:</span>
+                  <span className="display-value">{
+                    categories.find(c => c.id.toString() === formData.category_id)?.name || 'Unknown'
+                  }</span>
+                </div>
               </div>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3">
+          <div className="action-buttons">
             <button
               onClick={handleCreateExpense}
               disabled={isProcessing || !formData.amount || !formData.category_id}
-              className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="glass-btn glass-btn-primary"
             >
               {isProcessing ? 'Creating...' : 'Create Expense'}
             </button>
             <button
               onClick={resetScanner}
-              className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
+              className="glass-btn glass-btn-secondary"
             >
               Cancel
             </button>
@@ -282,14 +303,16 @@ const ReceiptScanner = ({ onExpenseCreated, categories }) => {
 
           {/* Raw Text (Collapsible) */}
           {scanResult.raw_text && (
-            <details className="text-sm">
-              <summary className="cursor-pointer text-gray-600 hover:text-gray-800">
-                View Raw OCR Text
-              </summary>
-              <pre className="mt-2 p-3 bg-gray-100 rounded text-xs overflow-auto">
-                {scanResult.raw_text}
-              </pre>
-            </details>
+            <div className="raw-text-section">
+              <details>
+                <summary>
+                  View Raw OCR Text
+                </summary>
+                <pre>
+                  {scanResult.raw_text}
+                </pre>
+              </details>
+            </div>
           )}
         </div>
       )}
