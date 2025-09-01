@@ -8,6 +8,7 @@ import {
 import App from './App.jsx';
 import Dashboard from './view/Dashboard.jsx';
 import ExpensesIndex from './view/ExpensesIndex.jsx';
+import AddExpense from './view/AddExpense.jsx';
 import AddIncome from './view/AddIncome.jsx';
 import Budget from './view/Budget.jsx';
 import Layout from './components/Layout.jsx';
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "expenses",
     element: <Layout><ExpensesIndex /></Layout>
+  },
+  {
+    path: "add-expense",
+    element: <Layout><AddExpense /></Layout>
   },
   {
     path: "income",
