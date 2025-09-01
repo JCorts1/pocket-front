@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Receipt } from 'lucide-react';
 import ReceiptScanner from '../components/ReceiptScanner';
+import '../assets/styles/ReceiptScanner.css';
 
 const AddExpense = () => {
   const [showReceiptScanner, setShowReceiptScanner] = useState(false);
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState('');
+  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
@@ -26,10 +29,15 @@ const AddExpense = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        setCategories(data);
+        setCategories(Array.isArray(data) ? data : []);
+      } else {
+        setCategories([]);
+        setMessage('Failed to fetch categories');
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
+      setMessage('Network error while fetching categories');
     }
   };
 
@@ -73,6 +81,36 @@ const AddExpense = () => {
     }
   };
 
+  const handleCreateCategory = async () => {
+    const token = localStorage.getItem('token');
+    if (!newCategoryName.trim()) {
+      setMessage('Category name cannot be blank.');
+      return;
+    }
+    try {
+      const response = await fetch(`${RAILS_API_URL}/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token,
+        },
+        body: JSON.stringify({ category: { name: newCategoryName } }),
+      });
+      const newCategory = await response.json();
+      if (response.ok) {
+        setCategories([...categories, newCategory]);
+        setFormData(prev => ({ ...prev, category_id: newCategory.id.toString() }));
+        setShowNewCategory(false);
+        setNewCategoryName('');
+        setMessage(`Category "${newCategory.name}" created!`);
+      } else {
+        setMessage(newCategory.error || 'Failed to create category.');
+      }
+    } catch (error) {
+      setMessage('Network error. Could not create category.');
+    }
+  };
+
   const handleExpenseCreated = (expense) => {
     setMessage('Expense created from receipt successfully!');
     setShowReceiptScanner(false);
@@ -84,125 +122,128 @@ const AddExpense = () => {
       <h1 className="text-2xl font-bold mb-6">Add Expense</h1>
 
       {message && (
-        <div className={`p-4 rounded-lg mb-6 ${
+        <div className={`message-container ${
           message.includes('success') 
-            ? 'bg-green-50 border border-green-200 text-green-700'
-            : 'bg-red-50 border border-red-200 text-red-700'
+            ? 'message-success'
+            : 'message-error'
         }`}>
           {message}
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Receipt Scanner Section */}
-        <div className="space-y-4">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Receipt className="text-blue-600" size={24} />
-              <h2 className="text-lg font-semibold text-blue-800">Scan Receipt</h2>
-            </div>
-            <p className="text-blue-700 mb-4">
-              Take a photo of your receipt and let our AI extract the details automatically.
-            </p>
-            <button
-              onClick={() => setShowReceiptScanner(true)}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Receipt size={20} />
-              Scan Receipt
-            </button>
-          </div>
-
-          {showReceiptScanner && (
-            <ReceiptScanner
-              onExpenseCreated={handleExpenseCreated}
-              categories={categories}
-            />
-          )}
-        </div>
-
+      <div className="expense-methods-grid">
         {/* Manual Entry Section */}
-        <div className="space-y-4">
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <PlusCircle className="text-gray-600" size={24} />
-              <h2 className="text-lg font-semibold text-gray-800">Manual Entry</h2>
+        <div className="add-expense-section manual-entry-section">
+          <h2>
+            <PlusCircle size={24} />
+            Manual Entry
+          </h2>
+          <p>
+            Enter expense details manually if you prefer.
+          </p>
+
+          <form onSubmit={handleManualSubmit} className="glass-form">
+            <div className="form-group">
+              <label htmlFor="amount">Amount *</label>
+              <input
+                type="number"
+                id="amount"
+                step="0.01"
+                min="0"
+                value={formData.amount}
+                onChange={(e) => handleInputChange('amount', e.target.value)}
+                className="glass-input"
+                placeholder="0.00"
+                required
+              />
             </div>
-            <p className="text-gray-700 mb-4">
-              Enter expense details manually if you prefer.
-            </p>
 
-            <form onSubmit={handleManualSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-1">
-                  Amount *
-                </label>
-                <input
-                  type="number"
-                  id="amount"
-                  step="0.01"
-                  min="0"
-                  value={formData.amount}
-                  onChange={(e) => handleInputChange('amount', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="0.00"
-                  required
-                />
-              </div>
+            <div className="form-group">
+              <label htmlFor="description">Description *</label>
+              <input
+                type="text"
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                className="glass-input"
+                placeholder="What was this expense for?"
+                required
+              />
+            </div>
 
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                  Description *
-                </label>
-                <input
-                  type="text"
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="What was this expense for?"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                  Category *
-                </label>
+            <div className="form-group">
+              <label htmlFor="category">Category *</label>
+              <div className="category-select-wrapper">
                 <select
                   id="category"
                   value={formData.category_id}
                   onChange={(e) => handleInputChange('category_id', e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="glass-select"
                   required
                 >
                   <option value="">Select a category</option>
-                  {categories.map(category => (
+                  {Array.isArray(categories) && categories.map(category => (
                     <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
                   ))}
                 </select>
+                <button
+                  type="button"
+                  className="add-category-btn"
+                  onClick={() => setShowNewCategory(!showNewCategory)}
+                >
+                  +
+                </button>
               </div>
+            </div>
+            {showNewCategory && (
+              <div className="new-category-form">
+                <input
+                  type="text"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder="New category name"
+                  className="glass-input"
+                  required
+                />
+                <button type="button" onClick={handleCreateCategory} className="form-btn-small">
+                  Save
+                </button>
+              </div>
+            )}
 
-              <button
-                type="submit"
-                className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
-              >
-                Add Expense
-              </button>
-            </form>
-          </div>
+            <button type="submit" className="glass-btn glass-btn-primary">
+              Add Expense
+            </button>
+            
+            <button 
+              type="button"
+              onClick={() => setShowReceiptScanner(true)}
+              className="glass-btn"
+            >
+              <Receipt size={20} />
+              Or Scan Receipt
+            </button>
+          </form>
         </div>
       </div>
+      
+      {showReceiptScanner && (
+        <ReceiptScanner
+          onExpenseCreated={handleExpenseCreated}
+          categories={categories}
+          autoStart={true}
+        />
+      )}
 
-      <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-        <h3 className="font-medium text-gray-800 mb-2">Tips for Better Receipt Scanning:</h3>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>• Ensure the receipt is well-lit and all text is visible</li>
-          <li>• Take the photo straight-on to avoid distortion</li>
-          <li>• Make sure the receipt is flat and not folded</li>
-          <li>• Include the entire receipt in the photo frame</li>
+      <div className="tips-section">
+        <h3>Tips for Better Receipt Scanning:</h3>
+        <ul>
+          <li>Ensure the receipt is well-lit and all text is visible</li>
+          <li>Take the photo straight-on to avoid distortion</li>
+          <li>Make sure the receipt is flat and not folded</li>
+          <li>Include the entire receipt in the photo frame</li>
         </ul>
       </div>
     </div>
