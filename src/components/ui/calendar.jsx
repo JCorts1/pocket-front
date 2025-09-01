@@ -14,49 +14,133 @@ function Calendar({
   ...props
 }) {
   return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      // The base component is made transparent
-      className={cn("p-3 bg-transparent", className)}
-      classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-semibold text-slate-800", // Dark text for month name
-        nav: "space-x-1 flex items-center",
-        nav_button: cn(
-          buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-white/20 p-0 opacity-80 hover:opacity-100 border-slate-300/50"
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell:
-          "text-slate-600 rounded-md w-9 font-normal text-[0.8rem]", // Dark grey for weekday names
-        row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 text-slate-800" // Dark text for numbers
-        ),
-        // --- THIS IS THE FIX for the selected day color ---
-        day_selected:
-          "bg-pink-500/80 text-white hover:bg-pink-500/90 hover:text-white focus:bg-pink-500 focus:text-white",
-        day_today: "bg-slate-200/80 text-slate-900", // A subtle background for today
-        day_outside: "text-slate-400 opacity-50",
-        day_disabled: "text-slate-400 opacity-50",
-        day_range_middle:
-          "aria-selected:bg-pink-500/30 aria-selected:text-slate-800", // Lighter pink for range
-        day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
-      }}
-      {...props}
-    />
+    <div className={cn("p-3", className)}>
+      <style jsx>{`
+        .calendar-container .rdp {
+          margin: 0;
+        }
+        .calendar-container .rdp-months {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        @media (min-width: 640px) {
+          .calendar-container .rdp-months {
+            flex-direction: row;
+            gap: 2rem;
+          }
+        }
+        .calendar-container .rdp-month {
+          width: 100%;
+        }
+        .calendar-container .rdp-table {
+          width: 100%;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+        .calendar-container .rdp-head_row,
+        .calendar-container .rdp-row {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+          gap: 2px;
+        }
+        .calendar-container .rdp-head_cell {
+          text-align: center;
+          font-size: 0.75rem;
+          font-weight: 500;
+          color: #6b7280;
+          padding: 0.5rem 0;
+        }
+        .calendar-container .rdp-cell {
+          text-align: center;
+        }
+        .calendar-container .rdp-day {
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 0.375rem;
+          font-size: 0.875rem;
+          font-weight: 400;
+          color: #374151;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .calendar-container .rdp-day:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+        .calendar-container .rdp-day_selected {
+          background: #ec4899 !important;
+          color: white !important;
+        }
+        .calendar-container .rdp-day_selected:hover {
+          background: #db2777 !important;
+        }
+        .calendar-container .rdp-day_today {
+          background: rgba(255, 255, 255, 0.3);
+          font-weight: 600;
+        }
+        .calendar-container .rdp-day_outside {
+          color: #9ca3af;
+          opacity: 0.5;
+        }
+        .calendar-container .rdp-day_disabled {
+          color: #9ca3af;
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+        .calendar-container .rdp-caption {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          margin-bottom: 1rem;
+        }
+        .calendar-container .rdp-caption_label {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #374151;
+        }
+        .calendar-container .rdp-nav {
+          position: absolute;
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          pointer-events: none;
+        }
+        .calendar-container .rdp-nav_button {
+          width: 28px;
+          height: 28px;
+          border-radius: 0.375rem;
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: #6b7280;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          pointer-events: auto;
+          transition: all 0.2s;
+        }
+        .calendar-container .rdp-nav_button:hover {
+          background: rgba(255, 255, 255, 0.3);
+          color: #374151;
+        }
+      `}</style>
+      <div className="calendar-container">
+        <DayPicker
+          showOutsideDays={showOutsideDays}
+          components={{
+            IconLeft: () => <ChevronLeft className="h-4 w-4" />,
+            IconRight: () => <ChevronRight className="h-4 w-4" />,
+          }}
+          {...props}
+        />
+      </div>
+    </div>
   )
 }
 Calendar.displayName = "Calendar"
