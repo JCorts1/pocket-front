@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from "date-fns";
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css'; // We need this for the base layout
-import { Calendar as CalendarIcon, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 import {
   Drawer,
@@ -25,34 +23,9 @@ const ExpensesIndex = () => {
     from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     to: new Date(),
   });
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [availableYears, setAvailableYears] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
   const [budgetAlerts, setBudgetAlerts] = useState([]);
-  const pickerRef = useRef(null);
-
-  // --- Logic to make the calendar responsive ---
-  const [numberOfMonths, setNumberOfMonths] = useState(window.innerWidth > 768 ? 2 : 1);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setNumberOfMonths(window.innerWidth > 768 ? 2 : 1);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-        setIsPickerOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [pickerRef]);
 
   const RAILS_API_URL = 'http://localhost:3000/api/v1';
 
@@ -131,11 +104,14 @@ const ExpensesIndex = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const handleDateSelect = (selectedDate) => {
-    setDate(selectedDate);
-    if (selectedDate?.from && selectedDate?.to) {
-      setIsPickerOpen(false);
-    }
+  const handleFromDateChange = (e) => {
+    const fromDate = new Date(e.target.value);
+    setDate(prev => ({ ...prev, from: fromDate }));
+  };
+
+  const handleToDateChange = (e) => {
+    const toDate = new Date(e.target.value);
+    setDate(prev => ({ ...prev, to: toDate }));
   };
 
   // Function to fetch available years with data
@@ -232,38 +208,37 @@ const ExpensesIndex = () => {
       <div className="expenses-header">
         <h1>My Finances</h1>
         <div className="header-controls">
-          <div className="date-picker-popover" ref={pickerRef}>
-            <button
-              id="date"
-              className="date-picker-trigger"
-              onClick={() => setIsPickerOpen(!isPickerOpen)}
-            >
-              <CalendarIcon className="date-picker-icon" />
-              {date?.from ? (
-                date.to ? (
-                  <>
-                    {format(date.from, "LLL dd, y")} -{" "}
-                    {format(date.to, "LLL dd, y")}
-                  </>
-                ) : (
-                  format(date.from, "LLL dd, y")
-                )
-              ) : (
-                <span>Pick a date</span>
-              )}
-            </button>
-            {isPickerOpen && (
-              <div className="date-picker-content">
-                <DayPicker
-                  initialFocus
-                  mode="range"
-                  defaultMonth={date?.from}
-                  selected={date}
-                  onSelect={handleDateSelect}
-                  numberOfMonths={numberOfMonths}
+          <div className="date-range-picker">
+            <div className="date-input-group">
+              <label htmlFor="fromDate">From:</label>
+              <div className="date-input-wrapper" onClick={() => document.getElementById('fromDate').showPicker()}>
+                <input
+                  id="fromDate"
+                  type="date"
+                  value={date.from ? format(date.from, "yyyy-MM-dd") : ""}
+                  onChange={handleFromDateChange}
+                  className="date-input"
                 />
+                <div className="date-display">
+                  {date.from ? format(date.from, "MMM dd, yyyy") : "Select date"}
+                </div>
               </div>
-            )}
+            </div>
+            <div className="date-input-group">
+              <label htmlFor="toDate">To:</label>
+              <div className="date-input-wrapper" onClick={() => document.getElementById('toDate').showPicker()}>
+                <input
+                  id="toDate"
+                  type="date"
+                  value={date.to ? format(date.to, "yyyy-MM-dd") : ""}
+                  onChange={handleToDateChange}
+                  className="date-input"
+                />
+                <div className="date-display">
+                  {date.to ? format(date.to, "MMM dd, yyyy") : "Select date"}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="summary-grid">

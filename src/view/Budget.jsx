@@ -50,8 +50,6 @@ const Budget = () => {
         const budgetsData = await budgetsResponse.json();
         const dashboardData = await dashboardResponse.json();
         
-        // Quick debug check
-        console.log('Budget categories:', budgetsData.map(b => ({id: b.id, category: b.category})));
         
         setBudgets(budgetsData);
         setDashboard(dashboardData);
