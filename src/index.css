@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -122,5 +123,61 @@
       images to be visible.
     */
     @apply text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  }
+  
+  /* Global glassmorphism text readability improvements */
+  input, textarea, select {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif !important;
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: #4b5563 !important;
+    opacity: 0.8 !important;
+  }
+  
+  /* Improve glassmorphism container text readability */
+  .form-container, 
+  .expense-form-container,
+  .income-form-container,
+  .expenses-list-container,
+  .budget-list-container {
+    color: #1f2937 !important;
+  }
+  
+  /* Glassmorphism input improvements */
+  .form-container input,
+  .expense-form-container input,
+  .income-form-container input,
+  .budget-drawer-form input,
+  .form-container textarea,
+  .expense-form-container textarea,
+  .income-form-container textarea,
+  .form-container select,
+  .expense-form-container select,
+  .budget-drawer-form select {
+    background: rgba(255, 255, 255, 0.4) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+    color: #1f2937 !important;
+    font-weight: 500 !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  
+  .form-container input:focus,
+  .expense-form-container input:focus,
+  .income-form-container input:focus,
+  .budget-drawer-form input:focus,
+  .form-container textarea:focus,
+  .expense-form-container textarea:focus,
+  .income-form-container textarea:focus,
+  .form-container select:focus,
+  .expense-form-container select:focus,
+  .budget-drawer-form select:focus {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
   }
 }

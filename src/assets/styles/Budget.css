@@ -1,5 +1,5 @@
 /* Budget Management Styles */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Using global Inter font family from index.css */
 
 .budget-list-container {
   width: 90%;
@@ -11,7 +11,7 @@
   border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
 }
 
 .budget-header {
@@ -246,7 +246,7 @@
 
 .budget-drawer-container {
   padding: 1.5rem 2rem 2rem 2rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
 }
 
 .budget-drawer h2 {
@@ -286,7 +286,7 @@
   border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.2);
   color: #333;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
   font-weight: 500;
   box-sizing: border-box;
 }
@@ -321,7 +321,7 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
   width: auto;
   max-width: 180px;
 }
