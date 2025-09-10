@@ -9,6 +9,7 @@ const ListIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height
 const LogoutIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>;
 const IncomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>;
 const BudgetIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8l-6 6"/><path d="M8 8h.01"/><path d="M16 16h.01"/></svg>;
+const RecurringIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21 8-4.56-4.56a1 1 0 0 0-1.41 0L11.59 7"/><path d="M3 16l4.56 4.56a1 1 0 0 0 1.41 0L12.41 17"/><path d="m21 8-10 10-4-4"/></svg>;
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -47,6 +48,12 @@ const Navbar = () => {
           <NavLink to="/budget">
             <BudgetIcon />
             <span>Budget Goals</span>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/recurring">
+            <RecurringIcon />
+            <span>Recurring</span>
           </NavLink>
         </li>
         <li>

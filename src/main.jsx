@@ -11,6 +11,7 @@ import ExpensesIndex from './view/ExpensesIndex.jsx';
 import AddExpense from './view/AddExpense.jsx';
 import AddIncome from './view/AddIncome.jsx';
 import Budget from './view/Budget.jsx';
+import RecurringExpenses from './view/RecurringExpenses.jsx';
 import Layout from './components/Layout.jsx';
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "budget",
     element: <Layout><Budget /></Layout>
+  },
+  {
+    path: "recurring",
+    element: <Layout><RecurringExpenses /></Layout>
   }
 ]);
 
