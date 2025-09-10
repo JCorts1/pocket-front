@@ -161,7 +161,7 @@
   cursor: pointer;
   border-radius: 0.5rem;
   transition: background-color 0.2s ease-in-out;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
 }
 
 .logout-button:hover {

@@ -1,5 +1,4 @@
-/* Sets the Poppins font for the whole app */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Using global Inter font family from index.css */
 
 .dashboard-container {
   background-image: url("../img/Dashboard-bg.jpg");
@@ -11,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
 }
 
 .expense-form-container {
@@ -61,7 +60,7 @@
   color: #333; /* Dark text for better readability */
   font-size: 1rem;
   font-weight: 500;
-  font-family: 'Poppins', sans-serif;
+  font-family: inherit;
 }
 
 .expense-form-container input::placeholder,
